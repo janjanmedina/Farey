@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/transitions_container"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--DESIGN BY ALEX FALCUTILA-->
+
+    <!--MAP FRAGMENT DISPLAY-->
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp" />
+
+    <!--END OF MAP FRAGMENT DISPLAY-->
+
+    <!--SEARCH RESULTS BACKGROUND-->
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/whitebg"
+        android:src="@drawable/bg"
+        android:scaleType="centerCrop"
+        android:visibility="gone"/>
+
+    <!--END OF SEARCH RESULTS BACKGROUND-->
+
+    <!--USE USER LOCATION BUTTON -->
+
+    <ImageButton
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/scan"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_above="@id/input_con"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/get_location"
+        android:elevation="8dp"
+        android:visibility="gone"/>
+
+    <!--END OF USE USER LOCATION BUTTON-->
+
+    <!--TAXI FARE PRICES DISPLAY-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="0dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:elevation="8dp"
+        android:background="@drawable/round_borders"
+        android:layout_above="@id/input_con"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        android:id="@+id/prices_display_con">
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/anim_taxi"
+            android:id="@+id/taxi_price_icon"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/taxi_price_icon"
+            android:layout_toEndOf="@id/taxi_price_icon"
+            android:layout_marginHorizontal="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:textSize="14sp"
+                android:textColor="#252525"
+                android:layout_marginBottom="5dp"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-condensed"
+                android:text="@string/main_taxi_cab"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:textSize="12sp"
+                android:textColor="#A5A5A5"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-condensed"
+                android:id="@+id/distance_display" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="#252525"
+            android:gravity="center_vertical"
+            android:id="@+id/taxi_cab_price"/>
+
+    </RelativeLayout>
+
+    <!--END OF TAXI FARE PRICE DISPLAY-->
+
+    <!--ORIGIN AND DESTINATION INPUT DISPLAY-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="0dp"
+        android:paddingHorizontal="0dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:id="@+id/input_con"
+        android:elevation="8dp"
+        android:background="@drawable/round_borders"
+        android:layout_alignParentBottom="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/taxi_icon_con"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="15dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/anim_taxi"
+                android:id="@+id/taxi_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:text="@string/display_title"
+                android:textSize="20sp"
+                android:textColor="#252525"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:textAlignment="gravity"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <!--ORIGIN INPUT CONTAINER-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/origin_input_con"
+            android:layout_below="@id/taxi_icon_con">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/origin"
+                android:padding="10dp"
+                android:background="@drawable/icon_borders"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/origin_icon"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:id="@+id/origin_til"
+                android:layout_toRightOf="@id/origin_icon"
+                android:layout_toEndOf="@id/origin_icon"
+                android:textColorHint="#252525">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="5dp"
+                    android:textSize="14sp"
+                    android:padding="10dp"
+                    android:id="@+id/origin_input"
+                    android:fontFamily="sans-serif-condensed"
+                    android:hint="@string/origin_hint"
+                    android:textColorHighlight="#858e9a"
+                    android:backgroundTint="#858e9a"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
+
+        <!--END OF ORIGIN INPUT CONTAINER-->
+
+        <!--DESTINATION INPUT CONTAINER-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/destination_input_con"
+            android:layout_below="@id/origin_input_con"
+            android:layout_marginBottom="10dp">
+
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/destination"
+                android:padding="10dp"
+                android:background="@drawable/icon_borders"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/destination_icon"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:id="@+id/destination_til"
+                android:layout_toRightOf="@id/destination_icon"
+                android:layout_toEndOf="@id/destination_icon"
+                android:textColorHint="#252525">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="5dp"
+                    android:padding="10dp"
+                    android:textSize="14sp"
+                    android:id="@+id/destination_input"
+                    android:fontFamily="sans-serif-condensed"
+                    android:hint="@string/destination_hint"
+                    android:textColorHighlight="#858e9a"
+                    android:backgroundTint="#858e9a"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
+
+        <!--END OF DESTINATION INPUT CONTAINER-->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:id="@+id/compute_butt"
+            android:layout_below="@id/destination_input_con"
+            android:layout_marginBottom="10dp"
+            android:text="@string/compute_button_text"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:background="@drawable/round_borders_black"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <!--END OF ORIGIN AND DESTINATION INPUT DISPLAY-->
+
+    <!--SEARCH RESULTS DISPLAY-->
+
+    <ListView
+        android:id="@+id/result_con"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/input_con"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:scrollbars="none">
+
+
+    </ListView>
+
+    <!--END OF SEARCH RESULTS DISPLAY-->
+
+</RelativeLayout>

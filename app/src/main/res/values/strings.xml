@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Farey</string>
+    <string name="title_activity_maps">Farey</string>
+    <string name="display_title">TAXI FAREY</string>
+    <string name="compute_button_text">COMPUTE</string>
+    <string name="origin_hint">FROM</string>
+    <string name="destination_hint">TO</string>
+    <string name="main_taxi_cab">Taxi Cab</string>
+</resources>
