@@ -40,8 +40,8 @@ private class APICall extends AsyncTask<String, String, String>() {
 
 - [x] User Interface (ALEX)
 - [x] API Integration (JANJAN)
-- [x] Fare Computation
-- [ ] Admin Side Application
+- [x] Fare Computation (ALEX)
+- [ ] Admin Side Application 
 - [ ] Backend API
 
 ## Bugs
