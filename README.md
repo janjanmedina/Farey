@@ -2,6 +2,14 @@
 
 This is an Android Application that is developed to predict Taxi Fares and compare to other current Ride-Sharing Taxi Services.
 
+## Adjusted WPR
+
+| Week       | UI                              | Programmer                          |
+| ---------- | ------------------------------- | ----------------------------------- |
+| 1          | Formula & Front End Design Code | Map Integration and API Integration |
+| 2          | Computation Page Code           | Computation Page Logic              |
+| 3          | Finalize User Interface         | Finalize, Debugging and Clean Code  |
+
 ## Problem
 
 Taximeters are implemented by LTFRB to ensure that the taxis are following the fare set for them. A Taximeter Calibration Certification sticker must be present at the windshield of the taxi for a taximeter to be valid. However, some taxis do not have a meter, either defective, turned off, or none at all. The tendency is drivers that turn off their meter or those have defective meter, give different price ranges, not fixed at all and overpriced. In turn, commuters, especially some tourists, are not aware of how the taxi price are computed leaving them confused and frustrated.
