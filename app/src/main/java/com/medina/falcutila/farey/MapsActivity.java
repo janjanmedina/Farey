@@ -3,6 +3,7 @@ package com.medina.falcutila.farey;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -10,6 +11,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -171,6 +173,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     Polyline line = null;
 
+    Formula formula;
+
+    String distance_res_string = "";
+    String distance_res_int = "";
+    String time_res_string = "";
+    String time_res_int = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,6 +214,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         items = new ArrayList<Map<String, String>>();
 
         builder = new LatLngBounds.Builder();
+
+        formula = new Formula();
 
         /* -------------------- ORIGIN AND DESTINATION LISTENERS (JANJAN) ----------------------- */
 
@@ -327,6 +338,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        prices_display_con.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PricesActivity.class);
+                intent.putExtra("origin", final_origin_name);
+                intent.putExtra("destination", final_destination_name);
+                intent.putExtra("distance_string", distance_res_string);
+                intent.putExtra("distance_int", distance_res_int);
+                intent.putExtra("time_string", time_res_string);
+                intent.putExtra("time_int", time_res_int);
+
+                startActivity(intent);
+            }
+        });
+
         /* --------------------------------------------------------------------------------- */
 
         /* ------------------------ LISTVIEW ADAPTER SETTINGS (JANJAN) --------------------- */
@@ -423,40 +449,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         /* -------------------- GET USERS CURRENT LOCATION (JANJAN) ---------------------- */
 
-//        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-//
-//        locationListener = new LocationListener() {
-//            public void onLocationChanged(Location location) {
-//                if (user_loc_lat == 0.0f & user_loc_long == 0.0f) {
-//                    user_loc_lat = (float) location.getLatitude();
-//                    user_loc_long = (float) location.getLongitude();
-//
-//                    Log.d("HTTP", "User Latitude Set");
-//                    Log.d("HTTP", "User Longitude Set");
-//
-//                    new APICall().execute("geocode", "latlng=" + user_loc_lat + "," + user_loc_long + "&key=" + API_KEY);
-//                }
-//
-//                Log.d("HTTP", "Latitude: " + (float) location.getLatitude());
-//                Log.d("HTTP", "Longitude: " + (float) location.getLongitude());
-//            }
-//
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//            }
-//
-//            public void onProviderEnabled(String provider) {
-//            }
-//
-//            public void onProviderDisabled(String provider) {
-//            }
-//        };
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//
-//            return;
-//        }
-//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                if (user_loc_lat == 0.0f & user_loc_long == 0.0f) {
+                    user_loc_lat = (float) location.getLatitude();
+                    user_loc_long = (float) location.getLongitude();
+
+                    Log.d("HTTP", "User Latitude Set");
+                    Log.d("HTTP", "User Longitude Set");
+
+                    new APICall().execute("geocode", "latlng=" + user_loc_lat + "," + user_loc_long + "&key=" + API_KEY);
+                }
+
+                Log.d("HTTP", "Latitude: " + (float) location.getLatitude());
+                Log.d("HTTP", "Longitude: " + (float) location.getLongitude());
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
         /* -------------------------------------------------------------------------------- */
     }
@@ -641,6 +667,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /* ---------------------------------------------------------------------------------------------- */
+
+    /* ----------------------------------- SET PRICES DISPLAY --------------------------------------- */
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void setPrices(int dist_init, int time_init, String distance, String duration) {
+        TransitionManager.beginDelayedTransition(transitionsContainer);
+
+        prices_display_con.setVisibility(View.VISIBLE);
+        get_location.setVisibility(View.GONE);
+        taxi_icon_con.setVisibility(View.GONE);
+        compute_butt.setVisibility(View.GONE);
+
+        distance_res_string = distance;
+        distance_res_int = dist_init + "";
+
+        time_res_string = duration;
+        time_res_int = time_init + "";
+
+        float dist_final = formula.toKilometers(dist_init);
+        int time_final = formula.toMinutes(time_init);
+
+        distance_display.setText(distance + " in " + duration);
+        taxi_cab_price.setText("₱" + formula.TaxiAirport(dist_final, time_final));
+    }
+
+    /* ----------------------------------------------------------------------------------------------- */
 
     /* ----------------------------------- CREATE POLYLINE (JANJAN) --------------------------------- */
 
@@ -944,6 +996,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     int dist_init = Integer.parseInt(distance.getString("value"));
                     int time_init = Integer.parseInt(duration.getString("value"));
+
+                    setPrices(dist_init, time_init, distance.getString("text"), duration.getString("text"));
                 }
 
                 Log.d("HTTP", "Result: " + s);

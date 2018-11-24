@@ -3,7 +3,9 @@
     package="com.medina.falcutila.farey">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature android:name="android.hardware.location.gps" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -26,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".PricesActivity"></activity>
     </application>
 
 </manifest>

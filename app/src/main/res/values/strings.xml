@@ -6,4 +6,13 @@
     <string name="origin_hint">FROM</string>
     <string name="destination_hint">TO</string>
     <string name="main_taxi_cab">Taxi Cab</string>
+    <string name="book_now">BOOK NOW</string>
+    <string name="grab_vary">Price range may vary depending on traffic conditions and route. Use Grab App for more details.</string>
+    <string name="angkas_vary">Price range may vary depending on traffic conditions and route. Use Angkas App for more details.</string>
+    <string name="uhop_vary">Price range may vary depending on traffic conditions and route. Use UHop App for more details.</string>
+    <string name="hype_vary">Price range may vary depending on traffic conditions and route. Use Hype App for more details.</string>
+    <string name="micab_vary">Price range may vary depending on traffic conditions and route. Use Micab App for more details.</string>
+    <string name="owto_vary">Price range may vary depending on traffic conditions and route. Use Owto App for more details.</string>
+    <string name="fastest_route">Fastest route now due to traffic conditions.</string>
+    <string name="taxi_vary">Price range may vary depending on traffic conditions. Make sure that the taxi has their meter turned on or functioning. If not, report it immediately.</string>
 </resources>
