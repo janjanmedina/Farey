@@ -689,7 +689,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int time_final = formula.toMinutes(time_init);
 
         distance_display.setText(distance + " in " + duration);
-        taxi_cab_price.setText("₱" + formula.TaxiAirport(dist_final, time_final));
+//        taxi_cab_price.setText("₱" + formula.TaxiAirport(dist_final, time_final));
     }
 
     /* ----------------------------------------------------------------------------------------------- */
