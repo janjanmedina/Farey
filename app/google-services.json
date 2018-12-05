@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "220667605980",
+    "firebase_url": "https://farey-ffea6.firebaseio.com",
+    "project_id": "farey-ffea6",
+    "storage_bucket": "farey-ffea6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220667605980:android:37807ad06f45eb56",
+        "android_client_info": {
+          "package_name": "com.medina.falcutila.farey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "220667605980-hf9fmvbhta71oqvq81snhm2kh8cb8260.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.medina.falcutila.farey",
+            "certificate_hash": "06d6f8e75a845b3511a2269adf6e71af50229eea"
+          }
+        },
+        {
+          "client_id": "220667605980-8glhp57dslvht16nmcq6i5irpr9otc84.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvKELUfJsadziy5Krypz3T94Ht4m2vrGc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "220667605980-8glhp57dslvht16nmcq6i5irpr9otc84.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

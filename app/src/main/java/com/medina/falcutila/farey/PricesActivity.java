@@ -11,15 +11,22 @@ import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,45 +46,97 @@ public class PricesActivity extends AppCompatActivity {
     ListView price_list;
     TextView chosen_origin_display;
     TextView chosen_destination_display;
-    TextView taxi_price_display;
-
-    TextView time_text_display;
-    TextView distance_text_display;
 
     // ListView Items
 
-    ArrayList<String> items;
+    ArrayList<Map<String, String>> items;
 
     // For Listview Item Details
 
-    String[] from = {"price_text"};
-    int[] to = {R.id.price_text};
+    String[] from = {"rideshare", "price"};
+    int[] to = {R.id.rideshare_text, R.id.price_text};
 
-    ArrayAdapter<String> adapter;
+    ArrayList<String> packages;
+    SimpleAdapter adapter;
 
     Formula formula;
+    RideShare rideShare;
+
+    FirebaseDatabase db;
+    DatabaseReference reference;
+
+    float dist_final;
+    int time_final;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prices);
 
-        price_list = (ListView) findViewById(R.id.price_list);
+        price_list = (ListView) findViewById(R.id.price_listview);
         chosen_origin_display = (TextView) findViewById(R.id.chosen_origin_display);
         chosen_destination_display = (TextView) findViewById(R.id.chosen_destination_display);
+
+        db = FirebaseDatabase.getInstance();
+        reference = db.getReference("RideShare");
 
         formula = new Formula();
 
         items = new ArrayList<>();
+        packages = new ArrayList<>();
 
-        adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.pricelist_item, items);
+        adapter = new SimpleAdapter(this, items, R.layout.pricelist_item, from, to);
         price_list.setAdapter(adapter);
 
+        AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startNewActivity(getApplicationContext(), packages.get(position));
+            }
+        };
+
+        price_list.setOnItemClickListener(listener);
+
         setChosenDisplay();
-        new APICall().execute();
+        setPriceDisplay();
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                items.clear();
+
+                Log.d("HTTP", "ON CHANGE");
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    rideShare = ds.getValue(RideShare.class);
+
+                    items.add(putData(ds.getKey(), compute(rideShare.getBaseFare(), rideShare.getPerKM(), rideShare.getPerMin())));
+
+                    if(rideShare.getPkg() != null) {
+                        packages.add(rideShare.getPkg());
+                    } else {
+                        packages.add("NULL");
+                    }
+                }
+
+                price_list.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+    }
+
+    private HashMap<String, String> putData(String rideshare, String price) {
+        HashMap<String, String> item = new HashMap<String, String>();
+        item.put("rideshare", rideshare);
+        item.put("price", price);
+        return item;
     }
 
     public void setChosenDisplay() {
+        Log.d("HTTP", "SET CHOSEN DISPLAY");
         String origin = getIntent().getStringExtra("origin");
         String destination = getIntent().getStringExtra("destination");
 
@@ -85,121 +144,36 @@ public class PricesActivity extends AppCompatActivity {
         chosen_destination_display.setText(destination);
     }
 
-    public void setPriceDisplay(String s) {
-        String distance_string = getIntent().getStringExtra("distance_string");
+    public String compute(int baseFare, float perKM, int perMin) {
+        float compute_price = formula.Formula(dist_final, time_final, baseFare, perMin, perKM);
+        Log.d("HTTP", baseFare + " " + perKM + " " + perMin + " " + compute_price);
+
+        return "₱ " + compute_price;
+    }
+
+    public void setPriceDisplay() {
+        Log.d("HTTP", "SET PRICE DISPLAY");
+
         String distance_int = getIntent().getStringExtra("distance_int");
-        String time_string = getIntent().getStringExtra("time_string");
         String time_int = getIntent().getStringExtra("time_int");
 
         int dist_init = Integer.parseInt(distance_int);
         int time_init = Integer.parseInt(time_int);
 
-        float dist_final = formula.toKilometers(dist_init);
-        int time_final = formula.toMinutes(time_init);
-
-        try{
-            Log.d("HTTP", "try");
-            items.clear();
-            // JSON Parsing of data
-            JSONArray jsonArray = new JSONArray(s);
-
-            for(int a = 0; a < jsonArray.length(); a++) {
-                JSONObject app = jsonArray.getJSONObject(a);
-
-                int base = Integer.parseInt(app.getString("base_fare"));
-                int per_min = Integer.parseInt(app.getString("per_min"));
-                float per_km = Float.parseFloat(app.getString("per_km"));
-
-                float compute_price = formula.Formula(dist_final, time_final, base, per_min, per_km);
-                Log.d("HTTP", a+1 + " " + compute_price);
-                items.add("₱ " + compute_price);
-            }
-
-            Log.d("HTTP", items.size() + "");
-
-            price_list.setAdapter(adapter);
-        } catch(Exception e) {
-            Log.d("HTTP", e.getMessage());
-        }
+        dist_final = formula.toKilometers(dist_init);
+        time_final = formula.toMinutes(time_init);
     }
 
     public void startNewActivity(Context context, String packageName) {
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-        if (intent == null) {
-            // Bring user to the market or let them choose an app?
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("market://details?id=" + packageName));
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
-
-    /* ----------------------------- ASYNCTASK FOR API CALLS (JANJAN) ------------------------------- */
-
-    private class APICall extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            Log.d("HTTP", "APICall onPreExecute");
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            // implement API in background and store the response in current variable
-            String current = "";
-
-            try {
-
-                URL url;
-                HttpURLConnection urlConnection = null;
-
-                try {
-                    url = new URL("https://farey-3d3a4.firebaseio.com/ride_shares/.json");
-                    Log.d("HTTP", "Requesting: " + url.toString());
-
-                    urlConnection = (HttpURLConnection) url
-                            .openConnection();
-
-                    InputStream in = urlConnection.getInputStream();
-
-                    InputStreamReader isw = new InputStreamReader(in);
-
-                    int data = isw.read();
-
-                    while (data != -1) {
-                        current += (char) data;
-                        data = isw.read();
-                    }
-
-                    // return the data to onPostExecute method
-                    return current;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                Log.d("HTTP", "Error: " + e.getMessage());
-                return "Exception: " + e.getMessage();
+        if(!packageName.equalsIgnoreCase("NULL")) {
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+            if (intent == null) {
+                // Bring user to the market or let them choose an app?
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=" + packageName));
             }
-            return current;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        @Override
-        protected void onPostExecute(String s) {
-            Log.d("HTTP", "REACHED POST EXECUTE");
-            setPriceDisplay(s);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     }
-
-    /* ---------------------------------------------------------------------------------------------- */
 }
